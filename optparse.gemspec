@@ -2,7 +2,7 @@ require_relative 'lib/optparse/version'
 
 Gem::Specification.new do |spec|
   spec.name          = "optparse"
-  spec.version       = Optparse::VERSION
+  spec.version       = "0.1.0"
   spec.authors       = ["Hiroshi SHIBATA"]
   spec.email         = ["hsbt@ruby-lang.org"]
 
@@ -10,8 +10,6 @@ Gem::Specification.new do |spec|
   spec.description   = %q{TODO: Write a longer description or delete this line.}
   spec.homepage      = "TODO: Put your gem's website or public repo URL here."
   spec.required_ruby_version = Gem::Requirement.new(">= 2.3.0")
-
-  spec.metadata["allowed_push_host"] = "TODO: Set to 'http://mygemserver.com'"
 
   spec.metadata["homepage_uri"] = spec.homepage
   spec.metadata["source_code_uri"] = "TODO: Put your gem's public repo URL here."
