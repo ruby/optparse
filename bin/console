@@ -1,7 +1,0 @@
-#!/usr/bin/env ruby
-
-require "bundler/setup"
-require "optparse"
-
-require "irb"
-IRB.start(__FILE__)
