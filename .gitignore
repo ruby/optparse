@@ -3,7 +3,9 @@
 /_yardoc/
 /coverage/
 /doc/
+/logs/
 /pkg/
 /spec/reports/
 /tmp/
 /Gemfile.lock
+/ChangeLog
