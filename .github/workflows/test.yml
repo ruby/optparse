@@ -4,13 +4,17 @@ on: [push, pull_request]
 
 jobs:
   build:
-    name: build (${{ matrix.ruby }} / ${{ matrix.os }})
     strategy:
       matrix:
         ruby: [ '3.0', 2.7, 2.6, 2.5, head ]
         os: [ ubuntu-latest, macos-latest ]
     runs-on: ${{ matrix.os }}
     steps:
+    - name: git config
+      run: |
+        git config --global core.autocrlf false
+        git config --global core.eol lf
+        git config --global advice.detachedHead 0
     - uses: actions/checkout@v2
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
@@ -20,3 +24,16 @@ jobs:
       run: bundle install
     - name: Run test
       run: rake test
+
+    - id: build
+      run: |
+        rake build
+        echo "::set-output name=pkg::${GITHUB_REPOSITORY#*/}-${RUNNING_OS%-*}"
+      env:
+        RUNNING_OS: ${{matrix.os}}
+      shell: bash
+    - name: Upload package
+      uses: actions/upload-artifact@v2
+      with:
+        path: pkg/*.gem
+        name: ${{steps.build.outputs.pkg}}
