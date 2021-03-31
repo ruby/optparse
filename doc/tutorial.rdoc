@@ -149,7 +149,7 @@ each has a required argument because the name definition has a following dummy w
 
   :include: ruby/required_argument.rb
 
-When an option is found, its name and the given argument are yielded.
+When an option is found, the given argument is yielded.
 
 Executions:
 
@@ -174,7 +174,7 @@ in square brackets.
 
   :include: ruby/optional_argument.rb
 
-When an option with an argument is found, its name and the given argument are yielded.
+When an option with an argument is found, the given argument yielded.
 
 Executions:
 
@@ -183,8 +183,4 @@ Executions:
   $ ruby optional_argument.rb -y BBB
   "--yyy BBB"
 
-Omitting an optional argument does not raise an error,
-and the option name is yielded with no argument.
-
-  $ ruby optional_argument.rb -x
-  "--xxx "
+Omitting an optional argument does not raise an error.
