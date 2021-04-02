@@ -1,9 +1,9 @@
 require 'optparse'
 parser = OptionParser.new
-parser.on('-x [XXX]', '--xxx') do |option|
-  p "--xxx #{option}"
+parser.on('-x [XXX]', '--xxx') do |value|
+  p ['--xxx', value]
 end
-parser.on('-y', '--y [YYY]') do |option|
-  p "--yyy #{option}"
+parser.on('-y', '--yyy [YYY]') do |value|
+  p ['--yyy', value]
 end
 parser.parse!
