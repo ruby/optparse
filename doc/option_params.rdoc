@@ -235,7 +235,7 @@ Executions:
 
   $ ruby long_with_negation.rb --help
   Usage: long_with_negation [options]
-          --[no-]binary
+          --[no-]binary                Long name with negation
   $ ruby long_with_negation.rb --binary
   [true, TrueClass]
   $ ruby long_with_negation.rb --no-binary
