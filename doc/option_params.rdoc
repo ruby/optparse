@@ -29,6 +29,7 @@ Contents:
     - {Simple Long Names}[#label-Simple+Long+Names]
     - {Long Names with Required Arguments}[#label-Long+Names+with+Required+Arguments]
     - {Long Names with Optional Arguments}[#label-Long+Names+with+Optional+Arguments]
+    - {Long Names with Negation}[#label-Long+Names+with+Negation]
   - {Mixed Names}[#label-Mixed+Names]
 - {Argument Styles}[#label-Argument+Styles]
 - {Argument Values}[#label-Argument+Values]
@@ -221,6 +222,24 @@ Executions:
   ["--xxx", nil]
   $ ruby long_optional.rb --xxx FOO
   ["--xxx", "FOO"]
+
+===== Long Names with Negation
+
+A long name may be defined with both positive and negative senses.
+
+File +long_with_negation.rb+ defines an option that has both senses.
+
+  :include: ruby/long_with_negation.rb
+
+Executions:
+
+  $ ruby long_with_negation.rb --help
+  Usage: long_with_negation [options]
+          --[no-]binary
+  $ ruby long_with_negation.rb --binary
+  [true, TrueClass]
+  $ ruby long_with_negation.rb --no-binary
+  [false, FalseClass]
 
 ==== Mixed Names
 

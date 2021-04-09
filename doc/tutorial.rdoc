@@ -110,6 +110,22 @@ Executions:
   $ ruby long_names.rb --z2#
   ["--y1% or --z2#", true]
 
+A long name may be defined with both positive and negative senses.
+
+File +long_with_negation.rb+ defines an option that has both senses.
+
+  :include: ruby/long_with_negation.rb
+
+Executions:
+
+  $ ruby long_with_negation.rb --help
+  Usage: long_with_negation [options]
+          --[no-]binary
+  $ ruby long_with_negation.rb --binary
+  [true, TrueClass]
+  $ ruby long_with_negation.rb --no-binary
+  [false, FalseClass]
+
 ==== Mixing Option Names
 
 Many developers like to mix short and long option names,
