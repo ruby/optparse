@@ -43,6 +43,7 @@ The class also has:
   - {Option with No Argument}[#label-Option+with+No+Argument]
   - {Option with Required Argument}[#label-Option+with+Required+Argument]
   - {Option with Optional Argument}[#label-Option+with+Optional+Argument]
+- {Argument Converters}[#label-Argument+Converters]
 
 === Defining Options
 
@@ -245,3 +246,13 @@ Executions:
   ["--yyy", "BBB"]
 
 Omitting an optional argument does not raise an error.
+
+=== Argument Converters
+
+An option can specify that its argument is to be converted
+from the default \String to an instance of another class.
+
+There are a number of built-in converters.
+You can also define custom converters.
+
+See {Argument Converters}[./argument_converters_rdoc.html].

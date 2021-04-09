@@ -358,9 +358,9 @@ Executions:
 
 === Custom Argument Converters
 
-You may create custom argument converters.
-To do so, call OptionParser#accept with a class argument
-and a block that converts the argument and returns the converted value.
+You can create custom argument converters.
+To create a custom converter, call OptionParser#accept with a class argument,
+along with a block that converts the argument and returns the converted value.
 
   :include: custom_converters.rb
 
