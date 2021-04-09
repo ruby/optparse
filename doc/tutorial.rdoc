@@ -32,6 +32,18 @@ The class also has:
 - Method #summarize: returns a text summary of the options.
 - Method #help: displays automatically-generated help text.
 
+=== Contents
+
+- {Defining Options}[#label-Defining+Options]
+- {Option Names}[#label-Option+Names]
+  - {Short Option Names}[#label-Short+Option+Names]
+  - {Long Option Names}[#label-Long+Option+Names]
+  - {Mixing Option Names}[#label-Mixing+Option+Names]
+- {Option Arguments}[#label-Option+Arguments]
+  - {Option with No Argument}[#label-Option+with+No+Argument]
+  - {Option with Required Argument}[#label-Option+with+Required+Argument]
+  - {Option with Optional Argument}[#label-Option+with+Optional+Argument]
+
 === Defining Options
 
 A common way to define an option in \OptionParser
