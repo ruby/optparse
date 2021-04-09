@@ -233,12 +233,10 @@ File +mixed_names.rb+ defines a mixture of short and long names.
 Executions:
 
   $ ruby mixed_names.rb --help
-  Usage: mixed_names [options]
-      -x, --xxx                        Short and long, simple
-          --yyy                        yYYY
-                                       Short and long, required argument
-          --zzz                        zZZZ
-                                       Short and long, optional argument
+Usage: mixed_names [options]
+    -x, --xxx                        Short and long, no argument
+    -y, --yyyYYY                     Short and long, required argument
+    -z, --zzz [ZZZ]                  Short and long, optional argument
   $ ruby mixed_names.rb -x
   ["--xxx", true]
   $ ruby mixed_names.rb --xxx

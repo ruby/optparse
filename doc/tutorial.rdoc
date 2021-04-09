@@ -127,9 +127,21 @@ Executions:
   $ ruby mixed_names.rb --xxx
   ["--xxx", true]
   $ ruby mixed_names.rb -y
-  ["--y1%", true]
-  $ ruby mixed_names.rb --y1%
-  ["--y1%", true]
+  mixed_names.rb:12:in `<main>': missing argument: -y (OptionParser::MissingArgument)
+  $ ruby mixed_names.rb -y FOO
+  ["--yyy", "FOO"]
+  $ ruby mixed_names.rb --yyy
+  mixed_names.rb:12:in `<main>': missing argument: --yyy (OptionParser::MissingArgument)
+  $ ruby mixed_names.rb --yyy BAR
+  ["--yyy", "BAR"]
+  $ ruby mixed_names.rb -z
+  ["--zzz", nil]
+  $ ruby mixed_names.rb -z BAZ
+  ["--zzz", "BAZ"]
+  $ ruby mixed_names.rb --zzz
+  ["--zzz", nil]
+  $ ruby mixed_names.rb --zzz BAT
+  ["--zzz", "BAT"]
 
 === Option Arguments
 
