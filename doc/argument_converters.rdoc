@@ -23,7 +23,7 @@ from the default \String to an instance of another class.
   - {String}[#label-String]
   - {Array}[#label-Array]
   - {Regexp}[#label-Regexp]
-= {Custom Argument Converters}[#label-Custom+Argument+Converters]
+- {Custom Argument Converters}[#label-Custom+Argument+Converters]
 
 === Built-In Argument Converters
 
@@ -362,7 +362,7 @@ You can create custom argument converters.
 To create a custom converter, call OptionParser#accept with a class argument,
 along with a block that converts the argument and returns the converted value.
 
-  :include: custom_converters.rb
+  :include: ruby/custom_converter.rb
 
 Executions:
 

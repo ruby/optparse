@@ -207,10 +207,10 @@ When an option is found, the given argument is yielded.
 
 Executions:
 
-$ ruby required_argument.rb --help
-Usage: required_argument [options]
-    -x, --xxx XXX                    Required argument via short name
-    -y, --y YYY                      Required argument via long name
+  $ ruby required_argument.rb --help
+  Usage: required_argument [options]
+      -x, --xxx XXX                    Required argument via short name
+      -y, --y YYY                      Required argument via long name
   $ ruby required_argument.rb -x AAA
   ["--xxx", "AAA"]
   $ ruby required_argument.rb -y BBB
