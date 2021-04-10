@@ -44,6 +44,10 @@ The class also has:
   - {Option with No Argument}[#label-Option+with+No+Argument]
   - {Option with Required Argument}[#label-Option+with+Required+Argument]
   - {Option with Optional Argument}[#label-Option+with+Optional+Argument]
+- {Keyword Argument <tt>into<tt>}[#label-Keyword+Argument+into]
+  - {Collecting Options}[#label-Collecting+Options]
+  - {Checking for Missing Options}[#label-Checking+for+Missing+Options]
+  - {Default Values for Options}[#label-Default+Values+for+Options]
 - {Argument Converters}[#label-Argument+Converters]
 
 === Defining Options
@@ -288,6 +292,75 @@ Executions:
   ["--yyy", "BBB"]
 
 Omitting an optional argument does not raise an error.
+
+=== Keyword Argument +into+
+
+In parsing options, you can add keyword option +into+ with a hash-like argument;
+each parsed option will be added as a name/value pair.
+
+This is useful for:
+
+- Collecting options.
+- Checking for missing options.
+- Providing default values for options.
+
+==== Collecting Options
+
+Use keyword argument +into+ to collect options.
+
+  :include: ruby/collected_options.rb
+
+Executions:
+
+  $ ruby collected_options.rb --help
+  Usage: into [options]
+      -x, --xxx                        Short and long, no argument
+      -y, --yyyYYY                     Short and long, required argument
+      -z, --zzz [ZZZ]                  Short and long, optional argument
+  $ ruby collected_options.rb --xxx
+  {:xxx=>true}
+  $ ruby collected_options.rb --xxx --yyy FOO
+  {:xxx=>true, :yyy=>"FOO"}
+  $ ruby collected_options.rb --xxx --yyy FOO --zzz Bar
+  {:xxx=>true, :yyy=>"FOO", :zzz=>"Bar"}
+  $ ruby collected_options.rb --xxx --yyy FOO --yyy BAR
+  {:xxx=>true, :yyy=>"BAR"}
+
+Note in the last execution that the argument value for option <tt>--yyy</tt>
+was overwritten.
+
+==== Checking for Missing Options
+
+Use the collected options to check for missing options.
+
+  :include: ruby/missing_options.rb
+
+Executions:
+
+  $ ruby missing_options.rb --help
+  Usage: missing_options [options]
+      -x, --xxx                        Short and long, no argument
+      -y, --yyyYYY                     Short and long, required argument
+      -z, --zzz [ZZZ]                  Short and long, optional argument
+  $ ruby missing_options.rb --yyy FOO
+  missing_options.rb:11:in `<main>': Missing required options: [:xxx, :zzz] (RuntimeError)
+
+==== Default Values for Options
+
+Initialize the +into+ argument to define default values for options.
+
+  :include: ruby/default_values.rb
+
+Executions:
+
+  $ ruby default_values.rb --help
+  Usage: default_values [options]
+      -x, --xxx                        Short and long, no argument
+      -y, --yyyYYY                     Short and long, required argument
+      -z, --zzz [ZZZ]                  Short and long, optional argument
+  $ ruby default_values.rb --yyy FOO
+  {:yyy=>"FOO", :zzz=>"BBB"}
+
 
 === Argument Converters
 
