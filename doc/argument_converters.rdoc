@@ -34,8 +34,7 @@ which are demonstrated below.
 
 File +date.rb+
 defines an option whose argument is to be converted to a \Date object.
-The argument is converted by method
-{Date.parse}[https://ruby-doc.org/stdlib/libdoc/date/rdoc/Date.html#method-c-parse].
+The argument is converted by method Date#parse.
 
   :include: ruby/date.rb
 
@@ -52,8 +51,7 @@ Executions:
 
 File +datetime.rb+
 defines an option whose argument is to be converted to a \DateTime object.
-The argument is converted by method
-{DateTime.parse}[https://ruby-doc.org/stdlib-2.6.1/libdoc/date/rdoc/DateTime.html#method-c-parse].
+The argument is converted by method DateTime#parse.
 
   :include: ruby/datetime.rb
 
@@ -70,9 +68,7 @@ Executions:
 
 File +time.rb+
 defines an option whose argument is to be converted to a \Time object.
-The argument is converted by method
-{Time.httpdate}[https://ruby-doc.org/stdlib-2.7.0/libdoc/time/rdoc/Time.html#method-c-httpdate] or
-{Time.parse}[https://ruby-doc.org/stdlib-2.7.0/libdoc/time/rdoc/Time.html#method-c-parse].
+The argument is converted by method Time#httpdate or Time#parse.
 
   :include: ruby/time.rb
 
@@ -87,8 +83,7 @@ Executions:
 
 File +uri.rb+
 defines an option whose argument is to be converted to a \URI object.
-The argument is converted by method
-{URI.parse}[https://ruby-doc.org/stdlib-2.7.2/libdoc/uri/rdoc/URI.html#method-c-parse].
+The argument is converted by method URI#parse.
 
   :include: ruby/uri.rb
 
@@ -105,7 +100,7 @@ Executions:
 
 File +shellwords.rb+
 defines an option whose argument is to be converted to an \Array object by method
-{Shellwords.shellwords}[https://ruby-doc.org/stdlib-2.7.0/libdoc/shellwords/rdoc/Shellwords.html#method-c-shellwords].
+Shellwords#shellwords.
 
   :include: ruby/shellwords.rb
 
@@ -120,8 +115,7 @@ Executions:
 
 File +integer.rb+
 defines an option whose argument is to be converted to an \Integer object.
-The argument is converted by method
-{Kernel.Integer}[https://ruby-doc.org/core/Kernel.html#method-i-Integer].
+The argument is converted by method Kernel#Integer.
 
   :include: ruby/integer.rb
 
@@ -142,8 +136,7 @@ Executions:
 
 File +float.rb+
 defines an option whose argument is to be converted to a \Float object.
-The argument is converted by method
-{Kernel.Float}[https://ruby-doc.org/core/Kernel.html#method-i-Float].
+The argument is converted by method Kernel#Float.
 
   :include: ruby/float.rb
 
@@ -163,10 +156,8 @@ Executions:
 File +numeric.rb+
 defines an option whose argument is to be converted to an instance
 of \Rational, \Float, or \Integer.
-The argument is converted by method
-{Kernel.Rational}[https://ruby-doc.org/core/Kernel.html#method-i-Rational],
-{Kernel.Float}[https://ruby-doc.org/core/Kernel.html#method-i-Float], or
-{Kernel.Integer}[https://ruby-doc.org/core/Kernel.html#method-i-Integer].
+The argument is converted by method Kernel#Rational,
+Kernel#Float, or Kernel#Integer.
 
   :include: ruby/numeric.rb
 
@@ -183,8 +174,7 @@ Executions:
 
 File +decimal_integer.rb+
 defines an option whose argument is to be converted to an \Integer object.
-The argument is converted by method
-{Kernel.Integer}[https://ruby-doc.org/core/Kernel.html#method-i-Integer].
+The argument is converted by method Kernel#Integer.
 
   :include: ruby/decimal_integer.rb
 
@@ -206,8 +196,7 @@ Executions:
 
 File +octal_integer.rb+
 defines an option whose argument is to be converted to an \Integer object.
-The argument is converted by method
-{Kernel.Integer}[https://ruby-doc.org/core/Kernel.html#method-i-Integer].
+The argument is converted by method Kernel#Integer.
 
   :include: ruby/octal_integer.rb
 
@@ -227,8 +216,7 @@ Executions:
 
 File +decimal_numeric.rb+
 defines an option whose argument is to be converted to an \Integer object.
-The argument is converted by method
-{Kernel.Integer}[https://ruby-doc.org/core/Kernel.html#method-i-Integer].
+The argument is converted by method {Kernel#Integer
 
   :include: ruby/decimal_numeric.rb
 
@@ -248,8 +236,7 @@ Executions:
 
 File +true_class.rb+
 defines an option whose argument is to be converted to +true+ or +false+.
-The argument is evaluated by method
-{Object#nil?}[https://ruby-doc.org/core-3.0.0/Object.html#method-i-nil-3F].
+The argument is evaluated by method Object#nil?.
 
   :include: ruby/true_class.rb
 
@@ -276,8 +263,7 @@ Executions:
 
 File +false_class.rb+
 defines an option whose argument is to be converted to +true+ or +false+.
-The argument is evaluated by method
-{Object#nil?}[https://ruby-doc.org/core-3.0.0/Object.html#method-i-nil-3F].
+The argument is evaluated by method Object#nil?.
 
   :include: ruby/false_class.rb
 
