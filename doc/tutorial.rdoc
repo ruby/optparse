@@ -39,6 +39,7 @@ The class also has:
   - {Short Option Names}[#label-Short+Option+Names]
   - {Long Option Names}[#label-Long+Option+Names]
   - {Mixing Option Names}[#label-Mixing+Option+Names]
+  - {Command-Line Abbreviations}[#label-Option+Command-Line+Abbreviations]
 - {Option Arguments}[#label-Option+Arguments]
   - {Option with No Argument}[#label-Option+with+No+Argument]
   - {Option with Required Argument}[#label-Option+with+Required+Argument]
@@ -185,6 +186,47 @@ Executions:
   $ ruby mixed_names.rb --zzz BAT
   ["--zzz", "BAT"]
 
+==== Command-Line Abbreviations
+
+By default, abbreviations for command-line option names are allowed.
+An abbreviated option is valid if it is unique among abbreviated option names.
+
+  :include: ruby/abbreviation.rb
+
+Executions:
+
+  $ ruby abbreviation.rb --help
+  Usage: abbreviation [options]
+      -n, --dry-run
+      -d, --draft
+  $ ruby abbreviation.rb -n
+  ["--dry-run", true]
+  $ ruby abbreviation.rb --dry-run
+  ["--dry-run", true]
+  $ ruby abbreviation.rb -d
+  ["--draft", true]
+  $ ruby abbreviation.rb --draft
+  ["--draft", true]
+  $ ruby abbreviation.rb --d
+  abbreviation.rb:9:in `<main>': ambiguous option: --d (OptionParser::AmbiguousOption)
+  $ ruby abbreviation.rb --dr
+  abbreviation.rb:9:in `<main>': ambiguous option: --dr (OptionParser::AmbiguousOption)
+  $ ruby abbreviation.rb --dry
+  ["--dry-run", true]
+  $ ruby abbreviation.rb --dra
+  ["--draft", true]
+
+You can disable abbreviation using method +require_exact+.
+
+  :include: ruby/no_abbreviation.rb
+
+Executions:
+
+  $ ruby no_abbreviation.rb --dry-ru
+  no_abbreviation.rb:10:in `<main>': invalid option: --dry-ru (OptionParser::InvalidOption)
+  $ ruby no_abbreviation.rb --dry-run
+  ["--dry-run", true]
+
 === Option Arguments
 
 An option may take no argument, a required argument, or an optional argument.
@@ -251,8 +293,23 @@ Omitting an optional argument does not raise an error.
 
 An option can specify that its argument is to be converted
 from the default \String to an instance of another class.
-
 There are a number of built-in converters.
-You can also define custom converters.
 
-See {Argument Converters}[./argument_converters_rdoc.html].
+Example: File +date.rb+
+defines an option whose argument is to be converted to a \Date object.
+The argument is converted by method Date#parse.
+
+  :include: ruby/date.rb
+
+Executions:
+
+  $ ruby date.rb --date 2001-02-03
+  [#<Date: 2001-02-03 ((2451944j,0s,0n),+0s,2299161j)>, Date]
+  $ ruby date.rb --date 20010203
+  [#<Date: 2001-02-03 ((2451944j,0s,0n),+0s,2299161j)>, Date]
+  $ ruby date.rb --date "3rd Feb 2001"
+  [#<Date: 2001-02-03 ((2451944j,0s,0n),+0s,2299161j)>, Date]
+
+You can also define custom converters.
+See {Argument Converters}[./argument_converters_rdoc.html]
+for both built-in and custom converters.
