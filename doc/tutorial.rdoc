@@ -39,7 +39,7 @@ The class also has:
   - {Short Option Names}[#label-Short+Option+Names]
   - {Long Option Names}[#label-Long+Option+Names]
   - {Mixing Option Names}[#label-Mixing+Option+Names]
-  - {Command-Line Abbreviations}[#label-Option+Command-Line+Abbreviations]
+  - {Command-Line Abbreviations}[#label-Command-Line+Abbreviations]
 - {Option Arguments}[#label-Option+Arguments]
   - {Option with No Argument}[#label-Option+with+No+Argument]
   - {Option with Required Argument}[#label-Option+with+Required+Argument]
