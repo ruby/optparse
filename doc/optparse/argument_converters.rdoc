@@ -344,8 +344,6 @@ Executions:
 
 === Custom Argument Converters
 
-An argument converter has:
-
 You can create custom argument converters.
 To create a custom converter, call OptionParser#accept with:
 
