@@ -384,5 +384,5 @@ Executions:
   [#<Date: 2001-02-03 ((2451944j,0s,0n),+0s,2299161j)>, Date]
 
 You can also define custom converters.
-See {Argument Converters}[./argument_converters_rdoc.html]
+See {Argument Converters}[./argument_converters.rdoc]
 for both built-in and custom converters.
