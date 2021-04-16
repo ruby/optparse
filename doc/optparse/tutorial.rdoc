@@ -87,7 +87,7 @@ An invalid option raises an exception.
 Method #parse!, which is used most often in this tutorial,
 removes from \ARGV the options and arguments it finds,
 leaving other non-option arguments for the program to handle on its own.
-The method returns the pared-down \ARGV array.
+The method returns the possibly-reduced \ARGV array.
 
 Executions:
 
@@ -621,8 +621,8 @@ precede those in the base list.
 
 === Methods for Defining Options
 
-Option-defining methods allow you to create an option and also append or prepend it
-to either the top list or the base list.
+Option-defining methods allow you to create an option, and also append/prepend it
+to the top list or append it to the base list.
 
 Each of these next three methods accepts a sequence of parameter arguments and a block
 creates an option object using method \Option#make_switch (see below),
