@@ -624,7 +624,7 @@ precede those in the base list.
 Option-defining methods allow you to create an option, and also append/prepend it
 to the top list or append it to the base list.
 
-Each of these next three methods accepts a sequence of parameter arguments and a block
+Each of these next three methods accepts a sequence of parameter arguments and a block,
 creates an option object using method \Option#make_switch (see below),
 and returns the created option:
 
