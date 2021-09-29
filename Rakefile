@@ -15,3 +15,7 @@ task :sync_tool do
 end
 
 task :default => :test
+
+task :rdoc do
+  sh("rdoc", "--op", "rdoc")
+end
