@@ -16,5 +16,5 @@ end
 task :default => :test
 
 task :rdoc do
-  sh("rdoc", "--op", "rdoc")
+  sh("rdoc", *Bundler::GemHelper.instance.gemspec.rdoc_options, ".")
 end
