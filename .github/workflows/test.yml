@@ -35,7 +35,7 @@ jobs:
         RUNNING_OS: ${{matrix.os}}
       shell: bash
     - name: Upload package
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         path: pkg/*.gem
         name: ${{steps.build.outputs.pkg}}
