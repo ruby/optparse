@@ -1903,6 +1903,9 @@ XXX
   # directory ~/.options, then the basename with '.options' suffix
   # under XDG and Haiku standard places.
   #
+  # The optional +into+ keyword argument works exactly like that accepted in
+  # method #parse
+  #
   def load(filename = nil, into: nil)
     unless filename
       basename = File.basename($0, '.*')
