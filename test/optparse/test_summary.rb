@@ -68,7 +68,6 @@ class TestOptionParserSummaryTest < TestOptionParser
     end
 
     s = o.summarize
-    puts s
 
     assert_match(/^\s*--long-long-option-param-without-short$/, s[0])
     assert_match(/^\s*Error desc$/, s[1])
