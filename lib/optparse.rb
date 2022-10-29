@@ -1904,7 +1904,7 @@ XXX
   # under XDG and Haiku standard places.
   #
   # The optional +into+ keyword argument works exactly like that accepted in
-  # method #parse
+  # method #parse.
   #
   def load(filename = nil, into: nil)
     unless filename
