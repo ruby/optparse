@@ -6,7 +6,7 @@ require 'optparse'
 opts = {}
 parser = OptionParser.new
 parser.on('-i') { opts["i"] = true }
-parser.on('-o') { puts["o"] = true }
+parser.on('-o') { opts["o"] = true }
 
 parser.subparser('add') {opts[:add] = {}}
   .on('-i') { opts[:add]["i"] = true }
