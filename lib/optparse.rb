@@ -1643,7 +1643,7 @@ XXX
     end
   end
 
-  def parse_in_order(argv = default_argv, setter = nil, &nonopt)  # :nodoc:
+  def parse_in_order(argv = default_argv, setter = nil, raise_unknown: self.raise_unknown, &nonopt)  # :nodoc:
     opt, arg, val, rest, sub = nil
     nonopt ||= proc {|a| throw :terminate, a}
     argv.unshift(arg) if arg = catch(:terminate) {
