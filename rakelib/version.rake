@@ -24,20 +24,24 @@ class << (helper = Bundler::GemHelper.instance)
     update_version
     commit_bump
   end
+
+  def bump(major, minor = 0, teeny = 0, pre: nil)
+    self.version = [major, minor, teeny, pre].compact.join(".")
+  end
 end
 
 major, minor, teeny = helper.gemspec.version.segments
 
-task "bump:teeny" do
-  helper.version = Gem::Version.new("#{major}.#{minor}.#{teeny+1}")
+task "bump:teeny", [:pre] do |t, pre: nil|
+  helper.bump(major, minor, teeny+1, pre: pre)
 end
 
-task "bump:minor" do
-  helper.version = Gem::Version.new("#{major}.#{minor+1}.0")
+task "bump:minor", [:pre] do |t, pre: nil|
+  helper.bump(major, minor+1, pre: pre)
 end
 
-task "bump:major" do
-  helper.version = Gem::Version.new("#{major+1}.0.0")
+task "bump:major", [:pre] do |t, pre: nil|
+  helper.bump(major+1, pre: pre)
 end
 
 task "bump" => "bump:teeny"
