@@ -46,7 +46,7 @@ jobs:
         rake build
         ls -l pkg/*.gem
         shasum -a 256 pkg/*.gem
-        echo "::set-output name=pkg::${GITHUB_REPOSITORY#*/}-${RUNNING_OS%-*}"
+        echo "pkg=${GITHUB_REPOSITORY#*/}-${RUNNING_OS%-*}" >> $GITHUB_OUTPUT
       env:
         RUNNING_OS: ${{matrix.os}}
       shell: bash
