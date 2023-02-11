@@ -42,7 +42,6 @@ The class also has method #help, which displays automatically-generated help tex
   - {Option with No Argument}[#label-Option+with+No+Argument]
   - {Option with Required Argument}[#label-Option+with+Required+Argument]
   - {Option with Optional Argument}[#label-Option+with+Optional+Argument]
-  - {Argument Abbreviations}[#label-Argument+Abbreviations]
 - {Argument Values}[#label-Argument+Values]
   - {Explicit Argument Values}[#label-Explicit+Argument+Values]
     - {Explicit Values in Array}[#label-Explicit+Values+in+Array]
