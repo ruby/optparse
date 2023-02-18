@@ -51,8 +51,10 @@ jobs:
       env:
         RUNNING_OS: ${{matrix.os}}
       shell: bash
+      if: ${{ matrix.os != 'windows-latest' }}
     - name: Upload package
       uses: actions/upload-artifact@v3
       with:
         path: pkg/*.gem
         name: ${{steps.build.outputs.pkg}}
+      if: ${{ matrix.os != 'windows-latest' }}
