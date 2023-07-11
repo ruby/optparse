@@ -57,4 +57,4 @@ jobs:
       with:
         path: pkg/*.gem
         name: ${{steps.build.outputs.pkg}}
-      if: ${{ matrix.os != 'windows-latest' }}
+      if: ${{ steps.build.outcome == 'success' }}
