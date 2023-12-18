@@ -57,7 +57,7 @@ jobs:
         matrix.ruby == needs.ruby-versions.outputs.latest
         }}
     - name: Upload package
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         path: pkg/*.gem
         name: ${{steps.build.outputs.pkg}}
