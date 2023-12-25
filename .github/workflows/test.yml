@@ -51,7 +51,11 @@ jobs:
       env:
         RUNNING_OS: ${{matrix.os}}
       shell: bash
-      if: ${{ matrix.os != 'windows-latest' }}
+      if: >-
+        ${{
+        matrix.os != 'windows-latest' &&
+        matrix.ruby == needs.ruby-versions.outputs.latest
+        }}
     - name: Upload package
       uses: actions/upload-artifact@v3
       with:
