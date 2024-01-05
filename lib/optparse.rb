@@ -1153,6 +1153,7 @@ XXX
     @default_argv = ARGV
     @require_exact = false
     @raise_unknown = true
+    @subparsers = nil
     add_officious
     yield self if block_given?
   end
@@ -1176,6 +1177,12 @@ XXX
   #
   def self.terminate(arg = nil)
     throw :terminate, arg
+  end
+
+  def subparser(name, *rest, &block)
+    parser = self.class.new(*rest)
+    (@subparsers ||= CompletingHash.new)[name] = [parser, block]
+    parser
   end
 
   @stack = [DefaultList]
@@ -1633,86 +1640,119 @@ XXX
   # Non-option arguments remain in +argv+.
   #
   def order!(argv = default_argv, into: nil, &nonopt)
-    setter = ->(name, val) {into[name.to_sym] = val} if into
+    setter = into.extend(SymSetter).method(:sym_set) if into
     parse_in_order(argv, setter, &nonopt)
   end
 
-  def parse_in_order(argv = default_argv, setter = nil, &nonopt)  # :nodoc:
-    opt, arg, val, rest = nil
+  module SymSetter
+    def sym_set(name, val)
+      self[name.to_sym] = val
+    end
+  end
+
+  def parse_option(arg, argv, setter = nil)
+    case arg
+    when /\A--([^=]*)(?:=(.*))?/m
+      opt, rest = $1, $2
+      opt.tr!('_', '-')
+      begin
+        sw, = complete(:long, opt, true)
+        if require_exact && !sw.long.include?(arg)
+          throw :terminate, arg unless raise_unknown
+          raise InvalidOption, arg
+        end
+      rescue ParseError
+        throw :terminate, arg unless raise_unknown
+        raise $!.set_option(arg, true)
+      end
+      begin
+        opt, cb, val = sw.parse(rest, argv) {|*exc| raise(*exc)}
+        val = cb.call(val) if cb
+        setter.call(sw.switch_name, val) if setter
+      rescue ParseError
+        raise $!.set_option(arg, rest)
+      end
+
+    when /\A-(.)((=).*|.+)?/m
+      eq, rest, opt = $3, $2, $1
+      has_arg, val = eq, rest
+      begin
+        sw, = search(:short, opt)
+        unless sw
+          begin
+            sw, = complete(:short, opt)
+            # short option matched.
+            val = arg.delete_prefix('-')
+            has_arg = true
+          rescue InvalidOption
+            raise if require_exact
+            # if no short options match, try completion with long
+            # options.
+            sw, = complete(:long, opt)
+            eq ||= !rest
+          end
+        end
+      rescue ParseError
+        throw :terminate, arg unless raise_unknown
+        raise $!.set_option(arg, true)
+      end
+      begin
+        opt, cb, val = sw.parse(val, argv) {|*exc| raise(*exc) if eq}
+      rescue ParseError
+        raise $!.set_option(arg, arg.length > 2)
+      else
+        raise InvalidOption, arg if has_arg and !eq and arg == "-#{opt}"
+      end
+      begin
+        argv.unshift(opt) if opt and (!rest or (opt = opt.sub(/\A-*/, '-')) != '-')
+        val = cb.call(val) if cb
+        setter.call(sw.switch_name, val) if setter
+      rescue ParseError
+        raise $!.set_option(arg, arg.length > 2)
+      end
+
+    else
+      return false
+    end
+
+    true
+  end
+
+  def parse_in_order(argv = default_argv, setter = nil, raise_unknown: self.raise_unknown, &nonopt)  # :nodoc:
+    opt, arg, val, rest, sub = nil
     nonopt ||= proc {|a| throw :terminate, a}
     argv.unshift(arg) if arg = catch(:terminate) {
       while arg = argv.shift
-        case arg
-        # long option
-        when /\A--([^=]*)(?:=(.*))?/m
-          opt, rest = $1, $2
-          opt.tr!('_', '-')
-          begin
-            sw, = complete(:long, opt, true)
-            if require_exact && !sw.long.include?(arg)
-              throw :terminate, arg unless raise_unknown
-              raise InvalidOption, arg
-            end
-          rescue ParseError
-            throw :terminate, arg unless raise_unknown
-            raise $!.set_option(arg, true)
-          end
-          begin
-            opt, cb, val = sw.parse(rest, argv) {|*exc| raise(*exc)}
-            val = cb.call(val) if cb
-            setter.call(sw.switch_name, val) if setter
-          rescue ParseError
-            raise $!.set_option(arg, rest)
-          end
+        next if parse_option(arg, argv, setter)
 
-        # short option
-        when /\A-(.)((=).*|.+)?/m
-          eq, rest, opt = $3, $2, $1
-          has_arg, val = eq, rest
+        # sub-command
+        if (key, (sub, block) = @subparsers&.complete(arg))
+          block.call if block
+          if setter
+            into = setter.receiver.class.new.extend(SymSetter)
+            setter.call(key, into)
+            subsetter = into.method(:sym_set)
+          end
           begin
-            sw, = search(:short, opt)
-            unless sw
-              begin
-                sw, = complete(:short, opt)
-                # short option matched.
-                val = arg.delete_prefix('-')
-                has_arg = true
-              rescue InvalidOption
-                raise if require_exact
-                # if no short options match, try completion with long
-                # options.
-                sw, = complete(:long, opt)
-                eq ||= !rest
-              end
+            pp argv: argv
+            sub.parse_in_order(argv, subsetter, raise_unknown: true) do |a|
+              pp arg: arg, a: a, argv: argv
+              nonopt.call(a) unless parse_option(a, argv)
             end
-          rescue ParseError
-            throw :terminate, arg unless raise_unknown
-            raise $!.set_option(arg, true)
+          rescue InvalidOption => e
+            e.recover(argv)
+            arg = argv.shift
+            retry if parse_option(arg, argv, setter)
+            raise
           end
-          begin
-            opt, cb, val = sw.parse(val, argv) {|*exc| raise(*exc) if eq}
-          rescue ParseError
-            raise $!.set_option(arg, arg.length > 2)
-          else
-            raise InvalidOption, arg if has_arg and !eq and arg == "-#{opt}"
-          end
-          begin
-            argv.unshift(opt) if opt and (!rest or (opt = opt.sub(/\A-*/, '-')) != '-')
-            val = cb.call(val) if cb
-            setter.call(sw.switch_name, val) if setter
-          rescue ParseError
-            raise $!.set_option(arg, arg.length > 2)
-          end
+        end
 
-        # non-option argument
-        else
-          catch(:prune) do
-            visit(:each_option) do |sw0|
-              sw = sw0
-              sw.block.call(arg) if Switch === sw and sw.match_nonswitch?(arg)
-            end
-            nonopt.call(arg)
+        catch(:prune) do
+          visit(:each_option) do |sw0|
+            sw = sw0
+            sw.block.call(arg) if Switch === sw and sw.match_nonswitch?(arg)
           end
+          nonopt.call(arg)
         end
       end
 
@@ -1723,7 +1763,7 @@ XXX
 
     argv
   end
-  private :parse_in_order
+  protected :parse_in_order
 
   #
   # Parses command line arguments +argv+ in permutation mode and returns
@@ -1742,6 +1782,9 @@ XXX
   # Non-option arguments remain in +argv+.
   #
   def permute!(argv = default_argv, into: nil)
+    if @subparsers
+      raise "cannot parse in permutation mode with subparsers"
+    end
     nonopts = []
     order!(argv, into: into, &nonopts.method(:<<))
     argv[0, 0] = nonopts
@@ -1765,7 +1808,7 @@ XXX
   # Non-option arguments remain in +argv+.
   #
   def parse!(argv = default_argv, into: nil)
-    if ENV.include?('POSIXLY_CORRECT')
+    if @subparsers or ENV.include?('POSIXLY_CORRECT')
       order!(argv, into: into)
     else
       permute!(argv, into: into)
