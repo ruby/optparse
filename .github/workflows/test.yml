@@ -44,6 +44,14 @@ jobs:
 
     - id: build
       run: |
+        latest=$(git tag --list --contains HEAD)
+        case "$latest" in
+          '') prev=;;
+          *.0.0) prev=${latest%.0.0}; prev=$((prev-1)).0.0;;
+          *.0) prev=${latest%.0}; x=${prev##*.}; prev=${prev%.*}.$((x-1)).0;;
+          *) x=${prev##*.}; prev=${prev%.*}.$((x-1));;
+        esac
+        ${prev:+git fetch --unshallow-exclude=$prev origin}
         rake build
         ls -l pkg/*.gem
         shasum -a 256 pkg/*.gem
