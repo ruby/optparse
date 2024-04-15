@@ -21,11 +21,13 @@ changelog = proc do |output, ver = nil, prev = nil|
 end
 
 tags = IO.popen(%w[git tag -l v[0-9]*]).grep(/v(.*)/) {$1}
-tags.sort_by! {|tag| tag.scan(/\d+/).map(&:to_i)}
-tags.pop if IO.popen(%W[git log --format=%H v#{tags.last}..HEAD --], &:read).empty?
-tags.inject(nil) do |prev, tag|
-  task("logs/ChangeLog-#{tag}") {|t| changelog[t.name, tag, prev]}
-  tag
+unless tags.empty?
+  tags.sort_by! {|tag| tag.scan(/\d+/).map(&:to_i)}
+  tags.pop if IO.popen(%W[git log --format=%H v#{tags.last}..HEAD --], &:read).empty?
+  tags.inject(nil) do |prev, tag|
+    task("logs/ChangeLog-#{tag}") {|t| changelog[t.name, tag, prev]}
+    tag
+  end
 end
 
 desc "Make ChangeLog"
