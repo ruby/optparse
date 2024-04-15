@@ -3,7 +3,7 @@ task "build" => "changelogs"
 changelog = proc do |output, ver = nil, prev = nil|
   ver &&= Gem::Version.new(ver)
   range = [[prev], [ver, "HEAD"]].map {|ver, branch| ver ? "v#{ver.to_s}" : branch}.compact.join("..")
-  cmd = %W[git log --format=fuller --topo-order --no-merges
+  cmd = %W[git log --date=iso --format=fuller --topo-order --no-merges
                --invert-grep --fixed-strings --grep=#{'[ci skip]'}
                #{range} --]
   IO.popen(cmd) do |log|
