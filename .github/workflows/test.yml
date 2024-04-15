@@ -42,9 +42,10 @@ jobs:
     - name: Run test
       run: rake test
 
-    - id: build
+    - id: fetch
       run: |
-        : fetch change logs
+        : Fetch deeper for changelogs
+        set -x
         latest=$(git tag --list --contains HEAD)
         case "$latest" in
           '') prev=;;
@@ -56,18 +57,24 @@ jobs:
         until git log -1 --oneline $prev; do
           git fetch --deepen=100
         done
-        rake build
-        ls -l pkg/*.gem
-        shasum -a 256 pkg/*.gem
-        echo "pkg=${GITHUB_REPOSITORY#*/}-${RUNNING_OS%-*}" >> $GITHUB_OUTPUT
-      env:
-        RUNNING_OS: ${{matrix.os}}
+        set +x
       shell: bash
       if: >-
         ${{
         matrix.os != 'windows-latest' &&
         matrix.ruby == needs.ruby-versions.outputs.latest
         }}
+
+    - id: build
+      run: |
+        rake build
+        ls -l pkg/*.gem
+        shasum -a 256 pkg/*.gem
+        echo "pkg=${GITHUB_REPOSITORY#*/}-${RUNNING_OS%-*}" >> $GITHUB_OUTPUT
+      env:
+        RUNNING_OS: ${{matrix.os}}
+      if: ${{ steps.fetch.outcome == 'success' }}
+
     - name: Upload package
       uses: actions/upload-artifact@v4
       with:
