@@ -27,11 +27,6 @@ jobs:
           - { os: windows-latest, ruby: jruby }
     runs-on: ${{ matrix.os }}
     steps:
-    - name: git config
-      run: |
-        git config --global core.autocrlf false
-        git config --global core.eol lf
-        git config --global advice.detachedHead 0
     - uses: actions/checkout@v4
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
@@ -42,28 +37,35 @@ jobs:
     - name: Run test
       run: rake test
 
-    - id: fetch
+    - id: build
+      name: Build package
       run: |
+        if command -v shasum > /dev/null; then
+          sha256sum=(shasum -a 256)
+        else
+          sha256sum=(ruby -rdigest -e 'ARGV.each{|f| print Digest::SHA256.file(f).hexdigest, "  "; puts f}')
+        fi
+        PS4='##[command]'
+        set -x
         : Fetch deeper for changelogs
         git fetch --force --no-tags origin 'refs/tags/v*:refs/tags/v*'
         prev="$(git tag --list --no-contains HEAD --sort version:refname | tail -1)"
-        git fetch --shallow-exclude=$prev origin
-      shell: bash
-      if: >-
-        ${{
-        matrix.os != 'windows-latest' &&
-        matrix.ruby == needs.ruby-versions.outputs.latest
-        }}
-
-    - id: build
-      run: |
+        branch="$(git symbolic-ref --short HEAD)"
+        git fetch ${prev:+--shallow-exclude=}${prev:---unshallow} origin ${branch}
+        : Re-checkout with LF
+        git config core.autocrlf false
+        git config core.eol lf
+        git checkout -f
+        : Build package
         rake build
-        ls -l pkg/*.gem
-        shasum -a 256 pkg/*.gem
         echo "pkg=${GITHUB_REPOSITORY#*/}-${RUNNING_OS%-*}" >> $GITHUB_OUTPUT
+        : Show info
+        ls -l pkg/*.gem
+        "${sha256sum[@]}" pkg/*.gem
+      shell: bash
       env:
         RUNNING_OS: ${{matrix.os}}
-      if: ${{ steps.fetch.outcome == 'success' }}
+      if: ${{ matrix.ruby == needs.ruby-versions.outputs.latest }}
 
     - name: Upload package
       uses: actions/upload-artifact@v4
