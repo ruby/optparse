@@ -45,19 +45,9 @@ jobs:
     - id: fetch
       run: |
         : Fetch deeper for changelogs
-        set -x
-        latest=$(git tag --list --contains HEAD)
-        case "$latest" in
-          '') prev=;;
-          *.0.0) prev=${latest%.0.0}; prev=$((prev-1)).0.0;;
-          *.0) prev=${latest%.0}; x=${prev##*.}; prev=${prev%.*}.$((x-1)).0;;
-          *) x=${prev##*.}; prev=${prev%.*}.$((x-1));;
-        esac
-        : ${prev:+git fetch --unshallow-exclude=$prev origin}
-        until git log -1 --oneline $prev; do
-          git fetch --deepen=100
-        done
-        set +x
+        git fetch --force --no-tags origin 'refs/tags/v*:refs/tags/v*'
+        prev="$(git tag --list --no-contains HEAD --sort version:refname | tail -1)"
+        git fetch --shallow-exclude=$prev origin
       shell: bash
       if: >-
         ${{
