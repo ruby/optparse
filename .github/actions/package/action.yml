@@ -1,0 +1,62 @@
+name: Upload built package
+description: >-
+  Build and update package.
+
+inputs:
+  upload-files:
+    required: false
+    default: 'pkg/*.gem'
+    description: File name pattern to upload.
+
+  package-name:
+    required: false
+    default: '${GITHUB_REPOSITORY#*/}-${RUNNER_OS%-*}'
+    description: Package name to upload.
+
+  build-program:
+    required: false
+    default: rake build
+    description: Command to build package files.
+
+runs:
+  using: composite
+
+  steps:
+    - id: setup
+      run: |
+        : Setup
+        PS4="##[command]"; set -x
+        : Fetch deeper for changelogs
+        git fetch --force --no-tags origin 'refs/tags/v*:refs/tags/v*'
+        set -- "$(git symbolic-ref --short HEAD)" $(git tag --list --no-contains HEAD --sort -version:refname)
+        branch=$1 prev=$2
+        git fetch ${prev:+--shallow-exclude=}${prev:---unshallow} origin ${branch}
+        : Re-checkout with LF
+        git config core.autocrlf false
+        git config core.eol lf
+        git checkout -f
+      shell: bash
+
+    - id: build
+      run: |
+        : Build
+        if command -v shasum > /dev/null; then
+          shasum=(shasum -a 256 -b) # Ubuntu, macOS
+        elif command -v sha256sum > /dev/null; then
+          shasum=(sha256sum -b) # Windows
+        else                    # fallback
+          shasum=(ruby -rdigest -e "ARGV.each{|f| print Digest::SHA256.file(f).hexdigest, ' *'; puts f}")
+        fi
+        PS4="##[command]"; set -x
+        ${{ inputs.build-program }}
+        : Show info
+        ls -l ${{ inputs.upload-files }}
+        "${shasum[@]}" ${{ inputs.upload-files }}
+        echo pkg="${{ inputs.package-name }}" >> $GITHUB_OUTPUT
+      shell: bash
+
+    - id: upload
+      uses: actions/upload-artifact@v4
+      with:
+        path: ${{ inputs.upload-files }}
+        name: ${{ steps.build.outputs.pkg }}

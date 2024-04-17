@@ -37,39 +37,5 @@ jobs:
     - name: Run test
       run: rake test
 
-    - id: build
-      name: Build package
-      run: |
-        if command -v shasum > /dev/null; then
-          sha256sum=(shasum -a 256)
-        else
-          sha256sum=(ruby -rdigest -e 'ARGV.each{|f| print Digest::SHA256.file(f).hexdigest, "  "; puts f}')
-        fi
-        PS4='##[command]'
-        set -x
-        : Fetch deeper for changelogs
-        git fetch --force --no-tags origin 'refs/tags/v*:refs/tags/v*'
-        prev="$(git tag --list --no-contains HEAD --sort version:refname | tail -1)"
-        branch="$(git symbolic-ref --short HEAD)"
-        git fetch ${prev:+--shallow-exclude=}${prev:---unshallow} origin ${branch}
-        : Re-checkout with LF
-        git config core.autocrlf false
-        git config core.eol lf
-        git checkout -f
-        : Build package
-        rake build
-        echo "pkg=${GITHUB_REPOSITORY#*/}-${RUNNING_OS%-*}" >> $GITHUB_OUTPUT
-        : Show info
-        ls -l pkg/*.gem
-        "${sha256sum[@]}" pkg/*.gem
-      shell: bash
-      env:
-        RUNNING_OS: ${{matrix.os}}
+    - uses: ./.github/actions/package
       if: ${{ matrix.ruby == needs.ruby-versions.outputs.latest }}
-
-    - name: Upload package
-      uses: actions/upload-artifact@v4
-      with:
-        path: pkg/*.gem
-        name: ${{steps.build.outputs.pkg}}
-      if: ${{ steps.build.outcome == 'success' }}
