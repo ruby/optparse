@@ -32,10 +32,9 @@ jobs:
       uses: ruby/setup-ruby@v1
       with:
         ruby-version: ${{ matrix.ruby }}
-    - name: Install dependencies
-      run: bundle install
+        bundler-cache: true
     - name: Run test
-      run: rake test
+      run: bundle exec rake test
 
     - uses: ./.github/actions/package
       if: ${{ matrix.ruby == needs.ruby-versions.outputs.latest }}
