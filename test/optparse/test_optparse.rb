@@ -91,6 +91,12 @@ class TestOptionParser < Test::Unit::TestCase
     result = {}
     @opt.parse %w(--array b,c,d), into: result
     assert_equal({array: %w(b c d)}, result)
+    result = {}
+    @opt.parse %w(-a b), into: result
+    assert_equal({array: %w(b)}, result)
+    result = {}
+    @opt.parse %w(--array b), into: result
+    assert_equal({array: %w(b)}, result)
   end
 
   def test_require_exact
