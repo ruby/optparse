@@ -120,4 +120,16 @@ class TestOptionParser < Test::Unit::TestCase
     e = assert_raise(OptionParser::InvalidOption) {@opt.parse(%w(-t))}
     assert_equal(["-t"], e.args)
   end
+
+  def test_default_help_option  # bug #74
+    @opt.require_exact = true       # !!!
+    sout, serr = capture_output() do
+      assert_raise(SystemExit) do
+        @opt.parse!(["--help"])
+      end
+    end
+    assert_empty(serr)
+    assert_match(/\AUsage: \w+ \[options\]\n\z/, sout)
+  end
+
 end
