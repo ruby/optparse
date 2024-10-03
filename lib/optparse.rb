@@ -1641,14 +1641,19 @@ XXX
           opt, rest = $1, $2
           opt.tr!('_', '-')
           begin
-            sw, = complete(:long, opt, true)
-            if require_exact && !sw.long.include?(arg)
-              throw :terminate, arg unless raise_unknown
-              raise InvalidOption, arg
+            if require_exact
+              sw, = search(:long, opt)
+            else
+              sw, = complete(:long, opt, true)
             end
           rescue ParseError
             throw :terminate, arg unless raise_unknown
             raise $!.set_option(arg, true)
+          else
+            unless sw
+              throw :terminate, arg unless raise_unknown
+              raise InvalidOption, arg
+            end
           end
           begin
             opt, cb, val = sw.parse(rest, argv) {|*exc| raise(*exc)}
