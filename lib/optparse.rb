@@ -7,6 +7,7 @@
 #
 # See OptionParser for documentation.
 #
+require 'set' unless defined?(Set)
 
 #--
 # == Developer Documentation (not for RDoc output)
@@ -1494,7 +1495,7 @@ XXX
       case o
       when Proc, Method
         block = notwice(o, block, 'block')
-      when Array, Hash
+      when Array, Hash, Set
         case pattern
         when CompletingHash
         when nil
