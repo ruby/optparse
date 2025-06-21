@@ -1846,7 +1846,8 @@ XXX
   #
   def permute!(argv = default_argv, **keywords)
     nonopts = []
-    order!(argv, **keywords, &nonopts.method(:<<))
+    method = nonopts.method(:<<)
+    order!(argv, **keywords, &method)
     argv[0, 0] = nonopts
     argv
   end
