@@ -6,7 +6,7 @@ class << (helper = Bundler::GemHelper.instance)
   def update_version
     File.open(mainfile, "r+b") do |f|
       d = f.read
-      if d.sub!(/^(\s*OptionParser::Version\s*=\s*)".*"/) {$1 + gemspec.version.to_s.dump}
+      if d.sub!(/^(\s*VERSION\s*=\s*)".*"/) {$1 + gemspec.version.to_s.dump}
         f.rewind
         f.truncate(0)
         f.print(d)
