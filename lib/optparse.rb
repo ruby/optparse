@@ -2314,42 +2314,42 @@ XXX
   # Raises when ambiguously completable string is encountered.
   #
   class AmbiguousOption < ParseError
-    const_set(:Reason, 'ambiguous option')
+    Reason = 'ambiguous option'
   end
 
   #
   # Raises when there is an argument for a switch which takes no argument.
   #
   class NeedlessArgument < ParseError
-    const_set(:Reason, 'needless argument')
+    Reason = 'needless argument'
   end
 
   #
   # Raises when a switch with mandatory argument has no argument.
   #
   class MissingArgument < ParseError
-    const_set(:Reason, 'missing argument')
+    Reason = 'missing argument'
   end
 
   #
   # Raises when switch is undefined.
   #
   class InvalidOption < ParseError
-    const_set(:Reason, 'invalid option')
+    Reason = 'invalid option'
   end
 
   #
   # Raises when the given argument does not match required format.
   #
   class InvalidArgument < ParseError
-    const_set(:Reason, 'invalid argument')
+    Reason = 'invalid argument'
   end
 
   #
   # Raises when the given argument word can't be completed uniquely.
   #
   class AmbiguousArgument < InvalidArgument
-    const_set(:Reason, 'ambiguous argument')
+    Reason = 'ambiguous argument'
   end
 
   #
@@ -2448,9 +2448,9 @@ XXX
   # and DecimalNumeric. See Acceptable argument classes (in source code).
   #
   module Acceptables
-    const_set(:DecimalInteger, OptionParser::DecimalInteger)
-    const_set(:OctalInteger, OptionParser::OctalInteger)
-    const_set(:DecimalNumeric, OptionParser::DecimalNumeric)
+    DecimalInteger = OptionParser::DecimalInteger
+    OctalInteger = OptionParser::OctalInteger
+    DecimalNumeric = OptionParser::DecimalNumeric
   end
 end
 
