@@ -2314,42 +2314,42 @@ XXX
   # Raises when ambiguously completable string is encountered.
   #
   class AmbiguousOption < ParseError
-    Reason = 'ambiguous option'
+    Reason = 'ambiguous option'    # :nodoc:
   end
 
   #
   # Raises when there is an argument for a switch which takes no argument.
   #
   class NeedlessArgument < ParseError
-    Reason = 'needless argument'
+    Reason = 'needless argument'    # :nodoc:
   end
 
   #
   # Raises when a switch with mandatory argument has no argument.
   #
   class MissingArgument < ParseError
-    Reason = 'missing argument'
+    Reason = 'missing argument'    # :nodoc:
   end
 
   #
   # Raises when switch is undefined.
   #
   class InvalidOption < ParseError
-    Reason = 'invalid option'
+    Reason = 'invalid option'    # :nodoc:
   end
 
   #
   # Raises when the given argument does not match required format.
   #
   class InvalidArgument < ParseError
-    Reason = 'invalid argument'
+    Reason = 'invalid argument'    # :nodoc:
   end
 
   #
   # Raises when the given argument word can't be completed uniquely.
   #
   class AmbiguousArgument < InvalidArgument
-    Reason = 'ambiguous argument'
+    Reason = 'ambiguous argument'    # :nodoc:
   end
 
   #
@@ -2448,9 +2448,11 @@ XXX
   # and DecimalNumeric. See Acceptable argument classes (in source code).
   #
   module Acceptables
+    # :stopdoc:
     DecimalInteger = OptionParser::DecimalInteger
     OctalInteger = OptionParser::OctalInteger
     DecimalNumeric = OptionParser::DecimalNumeric
+    # :startdoc:
   end
 end
 
