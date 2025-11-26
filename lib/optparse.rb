@@ -1643,8 +1643,8 @@ XXX
   #
   # :include: ../doc/optparse/creates_option.rdoc
   #
-  def on(*opts, &block)
-    define(*opts, &block)
+  def on(...)
+    define(...)
     self
   end
   alias def_option define
@@ -1666,8 +1666,8 @@ XXX
   #
   # The new option is added at the head of the summary.
   #
-  def on_head(*opts, &block)
-    define_head(*opts, &block)
+  def on_head(...)
+    define_head(...)
     self
   end
   alias def_head_option define_head
@@ -1690,8 +1690,8 @@ XXX
   #
   # The new option is added at the tail of the summary.
   #
-  def on_tail(*opts, &block)
-    define_tail(*opts, &block)
+  def on_tail(...)
+    define_tail(...)
     self
   end
   alias def_tail_option define_tail
