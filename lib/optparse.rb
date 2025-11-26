@@ -1172,8 +1172,8 @@ XXX
   #
   # See self.inc
   #
-  def inc(*args)
-    self.class.inc(*args)
+  def inc(...)
+    self.class.inc(...)
   end
 
   #
@@ -1234,11 +1234,11 @@ XXX
   #
   #   accept(t, pat, &block)
   #
-  def accept(*args, &blk) top.accept(*args, &blk) end
+  def accept(...) top.accept(...) end
   #
   # See #accept.
   #
-  def self.accept(*args, &blk) top.accept(*args, &blk) end
+  def self.accept(...) top.accept(...) end
 
   #
   # Directs to reject specified class argument.
@@ -1247,11 +1247,11 @@ XXX
   #
   #   reject(type)
   #
-  def reject(*args, &blk) top.reject(*args, &blk) end
+  def reject(...) top.reject(...) end
   #
   # See #reject.
   #
-  def self.reject(*args, &blk) top.reject(*args, &blk) end
+  def self.reject(...) top.reject(...) end
 
   #
   # Instance methods
@@ -1643,8 +1643,8 @@ XXX
   #
   # :include: ../doc/optparse/creates_option.rdoc
   #
-  def on(*opts, &block)
-    define(*opts, &block)
+  def on(...)
+    define(...)
     self
   end
   alias def_option define
@@ -1666,8 +1666,8 @@ XXX
   #
   # The new option is added at the head of the summary.
   #
-  def on_head(*opts, &block)
-    define_head(*opts, &block)
+  def on_head(...)
+    define_head(...)
     self
   end
   alias def_head_option define_head
@@ -1690,8 +1690,8 @@ XXX
   #
   # The new option is added at the tail of the summary.
   #
-  def on_tail(*opts, &block)
-    define_tail(*opts, &block)
+  def on_tail(...)
+    define_tail(...)
     self
   end
   alias def_tail_option define_tail
@@ -1719,18 +1719,18 @@ XXX
   #
   # Returns the rest of +argv+ left unparsed.
   #
-  def order(*argv, **keywords, &nonopt)
+  def order(*argv, ...)
     argv = argv[0].dup if argv.size == 1 and Array === argv[0]
-    order!(argv, **keywords, &nonopt)
+    order!(argv, ...)
   end
 
   #
   # Same as #order, but removes switches destructively.
   # Non-option arguments remain in +argv+.
   #
-  def order!(argv = default_argv, into: nil, **keywords, &nonopt)
+  def order!(argv = default_argv, into: nil, ...)
     setter = ->(name, val) {into[name.to_sym] = val} if into
-    parse_in_order(argv, setter, **keywords, &nonopt)
+    parse_in_order(argv, setter, ...)
   end
 
   def parse_in_order(argv = default_argv, setter = nil, exact: require_exact, **, &nonopt)  # :nodoc:
@@ -1846,18 +1846,18 @@ XXX
   # <code>[]=</code> method (so it can be Hash, or OpenStruct, or other
   # similar object).
   #
-  def permute(*argv, **keywords)
+  def permute(*argv, ...)
     argv = argv[0].dup if argv.size == 1 and Array === argv[0]
-    permute!(argv, **keywords)
+    permute!(argv, ...)
   end
 
   #
   # Same as #permute, but removes switches destructively.
   # Non-option arguments remain in +argv+.
   #
-  def permute!(argv = default_argv, **keywords)
+  def permute!(argv = default_argv, ...)
     nonopts = []
-    order!(argv, **keywords) {|nonopt| nonopts << nonopt}
+    order!(argv, ...) {|nonopt| nonopts << nonopt}
     argv[0, 0] = nonopts
     argv
   end
@@ -1869,20 +1869,20 @@ XXX
   # values are stored there via <code>[]=</code> method (so it can be Hash,
   # or OpenStruct, or other similar object).
   #
-  def parse(*argv, **keywords)
+  def parse(*argv, ...)
     argv = argv[0].dup if argv.size == 1 and Array === argv[0]
-    parse!(argv, **keywords)
+    parse!(argv, ...)
   end
 
   #
   # Same as #parse, but removes switches destructively.
   # Non-option arguments remain in +argv+.
   #
-  def parse!(argv = default_argv, **keywords)
+  def parse!(argv = default_argv, ...)
     if ENV.include?('POSIXLY_CORRECT')
-      order!(argv, **keywords)
+      order!(argv, ...)
     else
-      permute!(argv, **keywords)
+      permute!(argv, ...)
     end
   end
 
@@ -1905,7 +1905,7 @@ XXX
   #   # params[:bar] = "x"  # --bar x
   #   # params[:zot] = "z"  # --zot Z
   #
-  def getopts(*args, symbolize_names: false, **keywords)
+  def getopts(*args, symbolize_names: false, ...)
     argv = Array === args.first ? args.shift : default_argv
     single_options, *long_options = *args
 
@@ -1936,7 +1936,7 @@ XXX
       end
     end
 
-    parse_in_order(argv, setter, **keywords)
+    parse_in_order(argv, setter, ...)
     result
   end
 
@@ -1951,9 +1951,9 @@ XXX
   # Traverses @stack, sending each element method +id+ with +args+ and
   # +block+.
   #
-  def visit(id, *args, &block) # :nodoc:
+  def visit(id, ...) # :nodoc:
     @stack.reverse_each do |el|
-      el.__send__(id, *args, &block)
+      el.__send__(id, ...)
     end
     nil
   end
@@ -2049,10 +2049,10 @@ XXX
   # The optional +into+ keyword argument works exactly like that accepted in
   # method #parse.
   #
-  def load(filename = nil, **keywords)
+  def load(filename = nil, ...)
     unless filename
       basename = File.basename($0, '.*')
-      return true if load(File.expand_path("~/.options/#{basename}"), **keywords) rescue nil
+      return true if load(File.expand_path("~/.options/#{basename}"), ...) rescue nil
       basename << ".options"
       if !(xdg = ENV['XDG_CONFIG_HOME']) or xdg.empty?
         # https://specifications.freedesktop.org/basedir-spec/latest/#variables
@@ -2072,11 +2072,11 @@ XXX
         next if !dir or dir.empty?
         filename = File.join(dir, basename)
         filename = File.expand_path(filename) if expand
-        load(filename, **keywords) rescue nil
+        load(filename, ...) rescue nil
       }
     end
     begin
-      parse(*File.readlines(filename, chomp: true), **keywords)
+      parse(*File.readlines(filename, chomp: true), ...)
       true
     rescue Errno::ENOENT, Errno::ENOTDIR
       false
@@ -2089,10 +2089,10 @@ XXX
   #
   # +env+ defaults to the basename of the program.
   #
-  def environment(env = File.basename($0, '.*'), **keywords)
+  def environment(env = File.basename($0, '.*'), ...)
     env = ENV[env] || ENV[env.upcase] or return
     require 'shellwords'
-    parse(*Shellwords.shellwords(env), **keywords)
+    parse(*Shellwords.shellwords(env), ...)
   end
 
   #
@@ -2410,19 +2410,19 @@ XXX
     # Parses +self+ destructively in order and returns +self+ containing the
     # rest arguments left unparsed.
     #
-    def order!(**keywords, &blk) options.order!(self, **keywords, &blk) end
+    def order!(...) options.order!(self, ...) end
 
     #
     # Parses +self+ destructively in permutation mode and returns +self+
     # containing the rest arguments left unparsed.
     #
-    def permute!(**keywords) options.permute!(self, **keywords) end
+    def permute!(...) options.permute!(self, ...) end
 
     #
     # Parses +self+ destructively and returns +self+ containing the
     # rest arguments left unparsed.
     #
-    def parse!(**keywords) options.parse!(self, **keywords) end
+    def parse!(...) options.parse!(self, ...) end
 
     #
     # Substitution of getopts is possible as follows. Also see
@@ -2435,8 +2435,8 @@ XXX
     #   rescue OptionParser::ParseError
     #   end
     #
-    def getopts(*args, symbolize_names: false, **keywords)
-      options.getopts(self, *args, symbolize_names: symbolize_names, **keywords)
+    def getopts(*args, symbolize_names: false, ...)
+      options.getopts(self, *args, symbolize_names: symbolize_names, ...)
     end
 
     #
