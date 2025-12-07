@@ -32,6 +32,8 @@ Or install it yourself as:
 
 ## Usage
 
+Full documentation [is here](https://docs.ruby-lang.org/en/master/OptionParser.html).
+
 ```ruby
 require 'optparse'
 
