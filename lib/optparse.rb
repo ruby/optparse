@@ -1289,7 +1289,8 @@ XXX
 
   #
   # Program name to be emitted in error message and default banner, defaults
-  # to $0.
+  # to $0 stripped from executable extensions as defined by
+  # RbConfig::CONFIG["EXECUTABLE_EXTS"].
   #
   def program_name
     @program_name || default_program_name
