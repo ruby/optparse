@@ -1045,8 +1045,8 @@ local context state line
 _arguments -s -S \
 XXX
 
-  def compsys(to, name = program_name) # :nodoc:
-    to << "#compdef #{name}\n"
+  def compsys(to, name = nil) # :nodoc:
+    to << "#compdef #{name || program_name}\n"
     to << COMPSYS_HEADER
     visit(:compsys, {}, {}) {|o, d|
       to << %Q[  "#{o}[#{d.gsub(/[\\\"\[\]]/, '\\\\\&')}]" \\\n]
