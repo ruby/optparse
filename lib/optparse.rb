@@ -1292,7 +1292,11 @@ XXX
   # to $0.
   #
   def program_name
-    @program_name || strip_ext(File.basename($0))
+    @program_name || default_program_name
+  end
+
+  def default_program_name
+    @default_program_name ||= strip_ext(File.basename($0))
   end
 
   private def strip_ext(name)  # :nodoc:
