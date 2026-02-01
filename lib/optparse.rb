@@ -1045,7 +1045,7 @@ local context state line
 _arguments -s -S \
 XXX
 
-  def compsys(to, name = File.basename($0)) # :nodoc:
+  def compsys(to, name = program_name) # :nodoc:
     to << "#compdef #{name}\n"
     to << COMPSYS_HEADER
     visit(:compsys, {}, {}) {|o, d|
@@ -2046,7 +2046,7 @@ XXX
   #
   def load(filename = nil, **keywords)
     unless filename
-      basename = File.basename($0, '.*')
+      basename = program_name.dup
       return true if load(File.expand_path("~/.options/#{basename}"), **keywords) rescue nil
       basename << ".options"
       if !(xdg = ENV['XDG_CONFIG_HOME']) or xdg.empty?
@@ -2084,7 +2084,7 @@ XXX
   #
   # +env+ defaults to the basename of the program.
   #
-  def environment(env = File.basename($0, '.*'), **keywords)
+  def environment(env = program_name, **keywords)
     env = ENV[env] || ENV[env.upcase] or return
     require 'shellwords'
     parse(*Shellwords.shellwords(env), **keywords)
