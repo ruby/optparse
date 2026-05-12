@@ -13,9 +13,16 @@ class TestOptionParserZshCompletion < Test::Unit::TestCase
 
   def test_compsys
     compsys = @opt.compsys("", "zshcompsys")
+    assert_match(/\A#compdef zshcompsys\n/, compsys)
     assert_match(/\"-z\[zzz\]\"/, compsys)
     assert_match(/\"--foo\[\]\"/, compsys)
     assert_match(/\"--bar\[\]\"/, compsys)
     assert_match(/\"--for\[\]\"/, compsys)
+  end
+
+  def test_compsys_use_program_name
+    @opt.program_name = 'foo-bar'
+    compsys = @opt.compsys("", nil)
+    assert_match(/\A#compdef foo-bar\n/, compsys)
   end
 end

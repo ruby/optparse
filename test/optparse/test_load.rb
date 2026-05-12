@@ -6,7 +6,7 @@ require 'tmpdir'
 class TestOptionParserLoad < Test::Unit::TestCase
   def setup
     @tmpdir = Dir.mktmpdir("optparse_test-")
-    @basename = File.basename($0, '.*')
+    @basename = File.basename($0)
     @envs = %w[HOME XDG_CONFIG_HOME XDG_CONFIG_DIRS].each_with_object({}) do |v, h|
       h[v] = ENV.delete(v)
     end
