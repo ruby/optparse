@@ -262,6 +262,24 @@ require 'set' unless defined?(Set)
 #   $ ruby optparse-test.rb -a -b 100
 #   {:a=>true, :b=>100}
 #
+# === Aborting on Failure
+#
+# The +abort+ option of +order+, +parse+ and so on methods will call +OptionParser#abort+ on parsing
+# failure for graceful exits:
+#
+#   require 'optparse'
+#
+#   OptionParser.new do |parser|
+#     parser.on('--foo') { puts 'got --foo!' }
+#   end.parse!(abort: true)
+#
+# Used:
+#
+#   $ ruby optparse-test.rb --foo
+#   got --foo!
+#   $ ruby optparse-test.rb --bar
+#   optparse-test.rb : invalid option: --bar
+#
 # === Complete example
 #
 # The following example is a complete Ruby program.  You can run it and see the
@@ -1710,7 +1728,8 @@ XXX
   # each non-option argument is yielded. When optional +into+ keyword
   # argument is provided, the parsed option values are stored there via
   # <code>[]=</code> method (so it can be Hash, or OpenStruct, or other
-  # similar object).
+  # similar object). When optional +abort+ is supplied and truthy, any
+  # +ParseError+s that occur call `OptionParser#abort` for graceful exits.
   #
   # Returns the rest of +argv+ left unparsed.
   #
@@ -1723,9 +1742,11 @@ XXX
   # Same as #order, but removes switches destructively.
   # Non-option arguments remain in +argv+.
   #
-  def order!(argv = default_argv, into: nil, **keywords, &nonopt)
+  def order!(argv = default_argv, into: nil, abort: false, **keywords, &nonopt)
     setter = ->(name, val) {into[name.to_sym] = val} if into
     parse_in_order(argv, setter, **keywords, &nonopt)
+  rescue ParseError => err
+    abort ? abort(err) : raise
   end
 
   private def parse_in_order(argv = default_argv, setter = nil, exact: require_exact, **, &nonopt)  # :nodoc:
@@ -1837,7 +1858,8 @@ XXX
   # list of non-option arguments. When optional +into+ keyword
   # argument is provided, the parsed option values are stored there via
   # <code>[]=</code> method (so it can be Hash, or OpenStruct, or other
-  # similar object).
+  # similar object). When optional +abort+ is supplied and truthy, any
+  # +ParseError+s that occur call `OptionParser#abort` for graceful exits.
   #
   def permute(*argv, **keywords)
     argv = argv[0].dup if argv.size == 1 and Array === argv[0]
@@ -1860,7 +1882,9 @@ XXX
   # POSIXLY_CORRECT is set, and in permutation mode otherwise.
   # When optional +into+ keyword argument is provided, the parsed option
   # values are stored there via <code>[]=</code> method (so it can be Hash,
-  # or OpenStruct, or other similar object).
+  # or OpenStruct, or other similar object). When optional +abort+ is supplied
+  # and truthy, any +ParseError+s that occur call `OptionParser#abort` for
+  # graceful exits.
   #
   def parse(*argv, **keywords)
     argv = argv[0].dup if argv.size == 1 and Array === argv[0]
@@ -2036,8 +2060,8 @@ XXX
   # directory ~/.options, then the basename with '.options' suffix
   # under XDG and Haiku standard places.
   #
-  # The optional +into+ keyword argument works exactly like that accepted in
-  # method #parse.
+  # The optional +into+ and +abort+ keyword arguments works exactly like that
+  # accepted in method #parse.
   #
   def load(filename = nil, **keywords)
     unless filename
