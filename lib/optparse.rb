@@ -1470,7 +1470,8 @@ XXX
   #
   # :include: ../doc/optparse/creates_option.rdoc
   #
-  def make_switch(opts, block = nil)
+  def make_switch(opts, block = nil, **kwopts)
+    opts.append kwopts unless kwopts.empty? # Append keyword options to maintain backwards compatibility
     short, long, nolong, style, pattern, conv, not_pattern, not_conv, not_style = [], [], []
     ldesc, sdesc, desc, arg = [], [], []
     default_style = Switch::NoArgument
@@ -1628,8 +1629,8 @@ XXX
   #
   # :include: ../doc/optparse/creates_option.rdoc
   #
-  def define(*opts, &block)
-    top.append(*(sw = make_switch(opts, block)))
+  def define(*opts, **kwopts, &block)
+    top.append(*(sw = make_switch(opts, block, **kwopts)))
     sw[0]
   end
 
@@ -1638,8 +1639,8 @@ XXX
   #
   # :include: ../doc/optparse/creates_option.rdoc
   #
-  def on(*opts, &block)
-    define(*opts, &block)
+  def on(*opts, **kwopts, &block)
+    define(*opts, **kwopts, &block)
     self
   end
   alias def_option define
@@ -1649,8 +1650,8 @@ XXX
   #
   # :include: ../doc/optparse/creates_option.rdoc
   #
-  def define_head(*opts, &block)
-    top.prepend(*(sw = make_switch(opts, block)))
+  def define_head(*opts, **kwopts, &block)
+    top.prepend(*(sw = make_switch(opts, block, **kwopts)))
     sw[0]
   end
 
@@ -1661,8 +1662,8 @@ XXX
   #
   # The new option is added at the head of the summary.
   #
-  def on_head(*opts, &block)
-    define_head(*opts, &block)
+  def on_head(*opts, **kwopts, &block)
+    define_head(*opts, **kwopts, &block)
     self
   end
   alias def_head_option define_head
@@ -1672,8 +1673,8 @@ XXX
   #
   # :include: ../doc/optparse/creates_option.rdoc
   #
-  def define_tail(*opts, &block)
-    base.append(*(sw = make_switch(opts, block)))
+  def define_tail(*opts, **kwopts, &block)
+    base.append(*(sw = make_switch(opts, block, **kwopts)))
     sw[0]
   end
 
@@ -1685,8 +1686,8 @@ XXX
   #
   # The new option is added at the tail of the summary.
   #
-  def on_tail(*opts, &block)
-    define_tail(*opts, &block)
+  def on_tail(*opts, **kwopts, &block)
+    define_tail(*opts, **kwopts, &block)
     self
   end
   alias def_tail_option define_tail
