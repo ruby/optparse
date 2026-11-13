@@ -1049,7 +1049,9 @@ XXX
     to << "#compdef #{name}\n"
     to << COMPSYS_HEADER
     visit(:compsys, {}, {}) {|o, d|
-      to << %Q[  "#{o}[#{d.gsub(/[\\\"\[\]]/, '\\\\\&')}]" \\\n]
+      # Escape what zsh would expand inside the double quotes ($ and `), as
+      # well as the characters _arguments treats specially.
+      to << %Q[  "#{o}[#{d.gsub(/[\\\"\[\]$`]/, '\\\\\&')}]" \\\n]
     }
     to << "  '*:file:_files' && return 0\n"
   end
