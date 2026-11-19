@@ -2249,11 +2249,11 @@ XXX
     Reason = 'parse error'
 
     # :nodoc:
-    def initialize(*args, additional: nil)
+    def initialize(*args, additional: nil, reason: nil)
       @additional = additional
       @arg0, = args
       @args = args
-      @reason = nil
+      @reason = reason
     end
 
     attr_reader :args
