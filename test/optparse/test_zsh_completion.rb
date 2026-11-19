@@ -18,4 +18,10 @@ class TestOptionParserZshCompletion < Test::Unit::TestCase
     assert_match(/\"--bar\[\]\"/, compsys)
     assert_match(/\"--for\[\]\"/, compsys)
   end
+
+  def test_compsys_escapes_shell_expansion
+    @opt.define("--price", "costs $HOME and `date`") {}
+    compsys = @opt.compsys("", "zshcompsys")
+    assert_include(compsys, %q["--price[costs \\$HOME and \\`date\\`]"])
+  end
 end
