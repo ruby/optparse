@@ -52,6 +52,7 @@ The class also has method #help, which displays automatically-generated help tex
   - {Collecting Options}[#label-Collecting+Options]
   - {Checking for Missing Options}[#label-Checking+for+Missing+Options]
   - {Default Values for Options}[#label-Default+Values+for+Options]
+- {Keyword Argument abort}[#label-Keyword+Argument+abort]
 - {Argument Converters}[#label-Argument+Converters]
 - {Help}[#label-Help]
 - {Top List and Base List}[#label-Top+List+and+Base+List]
@@ -120,7 +121,7 @@ is with instance method OptionParser#on.
 
 The method may be called with any number of arguments
 (whose order does not matter),
-and may also have a trailing optional keyword argument +into+.
+and may also have trailing optional keyword arguments +into+ and +abort+.
 
 The given arguments determine the characteristics of the new option.
 These may include:
@@ -542,6 +543,12 @@ Executions:
   $ ruby default_values.rb --yyy FOO
   {:yyy=>"FOO", :zzz=>"BBB"}
 
+=== Keyword Argument +abort+
+
+In parsing options, you can add keyword option +abort+ with a boolean. If passed
++true+, any +OptionParser::ParseError+ errors that occur when parsing arguments
+will instead call +OptionParser#abort+ to stop argument processing.
+
 === Argument Converters
 
 An option can specify that its argument is to be converted
@@ -706,6 +713,8 @@ Each of these methods:
   whose initial value is ARGV.
 - Accepts an optional keyword argument +into+
   (see {Keyword Argument into}[#label-Keyword+Argument+into]).
+- Accepts an optional keyword argument +abort+
+  (see {Keyword Argument abort}[#label-Keyword+Argument+abort]).
 - Returns +argv+, possibly with some elements removed.
 
 The three other methods have names _not_ ending with a "bang":
@@ -720,6 +729,8 @@ Each of these methods:
   _or_ zero or more string arguments.
 - Accepts an optional keyword argument +into+ and its value _into_.
   (see {Keyword Argument into}[#label-Keyword+Argument+into]).
+- Accepts an optional keyword argument +abort+.
+  (see {Keyword Argument abort}[#label-Keyword+Argument+abort]).
 - Returns +argv+, possibly with some elements removed.
 
 ==== \Method +parse!+
@@ -731,6 +742,8 @@ Each of these methods:
   whose initial value is ARGV.
 - Accepts an optional keyword argument +into+
   (see {Keyword Argument into}[#label-Keyword+Argument+into]).
+- Accepts an optional keyword argument +abort+
+  (see {Keyword Argument abort}[#label-Keyword+Argument+abort]).
 - Returns +argv+, possibly with some elements removed.
 
 The method processes the elements in +argv+ beginning at <tt>argv[0]</tt>,
@@ -787,6 +800,8 @@ Processing ended by non-option found when +POSIXLY_CORRECT+ is defined:
   _or_ zero or more string arguments.
 - Accepts an optional keyword argument +into+ and its value _into_.
   (see {Keyword Argument into}[#label-Keyword+Argument+into]).
+- Accepts an optional keyword argument +abort+ and a truthy value.
+  (see {Keyword Argument abort}[#label-Keyword+Argument+abort]).
 - Returns +argv+, possibly with some elements removed.
 
 If given an array +ary+, the method forms array +argv+ as <tt>ary.dup</tt>.
@@ -795,7 +810,7 @@ into array +argv+.
 
 The method calls
 
-  parse!(argv, into: into)
+  parse!(argv, into: into, abort: abort)
 
 Note that environment variable +POSIXLY_CORRECT+
 and the terminator argument <tt>--</tt> are honored.
