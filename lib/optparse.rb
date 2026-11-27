@@ -563,6 +563,10 @@ class OptionParser
     #
     private def parse_arg(arg) # :nodoc:
       pattern or return nil, [arg]
+      # As in #parse_in_order: an argument that is not valid in its encoding
+      # would make Regexp#match raise, and String#rindex below fail to find a
+      # substring it does contain.
+      arg = arg.b unless arg.valid_encoding?
       unless m = pattern.match(arg)
         yield(InvalidArgument, arg)
         return arg, []
@@ -1733,6 +1737,14 @@ XXX
     nonopt ||= proc {|a| throw :terminate, a}
     argv.unshift(arg) if arg = catch(:terminate) {
       while arg = argv.shift
+        # Ruby passes arguments through ARGV as the bytes it was given, so one
+        # can hold bytes that are not valid in its encoding, such as a file
+        # name from another system. Matching such a string raises
+        # ArgumentError from Regexp#===, before optparse can decide whether it
+        # is an option at all, so treat it as the bytes it is. Only arguments
+        # that raise today are affected.
+        arg = arg.b unless arg.valid_encoding?
+
         case arg
         # long option
         when /\A--([^=]*)(?:=(.*))?/m
