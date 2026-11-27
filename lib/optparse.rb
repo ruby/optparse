@@ -1045,8 +1045,8 @@ local context state line
 _arguments -s -S \
 XXX
 
-  def compsys(to, name = File.basename($0)) # :nodoc:
-    to << "#compdef #{name}\n"
+  def compsys(to, name = nil) # :nodoc:
+    to << "#compdef #{name || program_name}\n"
     to << COMPSYS_HEADER
     visit(:compsys, {}, {}) {|o, d|
       to << %Q[  "#{o}[#{d.gsub(/[\\\"\[\]]/, '\\\\\&')}]" \\\n]
@@ -1289,10 +1289,15 @@ XXX
 
   #
   # Program name to be emitted in error message and default banner, defaults
-  # to $0.
+  # to $0 stripped from executable extensions as defined by
+  # RbConfig::CONFIG["EXECUTABLE_EXTS"].
   #
   def program_name
-    @program_name || strip_ext(File.basename($0))
+    @program_name || default_program_name
+  end
+
+  def default_program_name
+    @default_program_name ||= strip_ext(File.basename($0))
   end
 
   private def strip_ext(name)  # :nodoc:
@@ -2041,7 +2046,7 @@ XXX
   #
   def load(filename = nil, **keywords)
     unless filename
-      basename = File.basename($0, '.*')
+      basename = program_name.dup
       return true if load(File.expand_path("~/.options/#{basename}"), **keywords) rescue nil
       basename << ".options"
       if !(xdg = ENV['XDG_CONFIG_HOME']) or xdg.empty?
@@ -2079,7 +2084,7 @@ XXX
   #
   # +env+ defaults to the basename of the program.
   #
-  def environment(env = File.basename($0, '.*'), **keywords)
+  def environment(env = program_name, **keywords)
     env = ENV[env] || ENV[env.upcase] or return
     require 'shellwords'
     parse(*Shellwords.shellwords(env), **keywords)
